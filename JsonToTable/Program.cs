@@ -22,14 +22,19 @@ namespace JsonToTable
                 PathDefinder.Path = path;
 
 
+            var reader = new FileReader();
+            var converter = new Converters.Converter();
+           
             while (true)
             {
-                var reader = new FileReader();
 
-                var converter = new Converters.Converter();
                 var convertedData = converter.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
 
-                Console.WriteLine("\n" + converter.Convert(convertedData));
+                var resultStr = converter.Convert(convertedData);
+                reader.Write(PathDefinder.Path + "/result.txt", resultStr);
+
+
+                Console.WriteLine("\n" + resultStr);
 
 
                 Console.WriteLine("\nEnter space and press Enter to continue or just Enter to exit");
