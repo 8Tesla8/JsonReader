@@ -1,4 +1,5 @@
-﻿using JsonToTable.FileWorkers.Reader;
+﻿using JsonToTable.FileWorkers;
+using JsonToTable.FileWorkers.Reader;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,26 +11,26 @@ namespace JsonToTable
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello World! \n");
+
+            Console.WriteLine("Current path: ");
+            Console.WriteLine(PathDefinder.Path + "\n");
+
+            Console.WriteLine("Write path to data.txt file or press enter to use current path: ");
+            var path = Console.ReadLine();
+            if (!string.IsNullOrEmpty(path)) 
+                PathDefinder.Path = path;
+
 
             while (true)
             {
-
-                //var path 
-
                 var reader = new FileReader();
 
-
-                //create filtration 
                 var converter = new Converters.Converter();
-                var data = converter.Convert(@"{ ""Name"":""Apple"", 
-            ""Price"":""12.3"" }  
-            ,
-             { ""Name"":""Grape"", ""Price"":""3.21"" }");
+                var convertedData = converter.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
 
-                var str = converter.Convert(data);
+                Console.WriteLine("\n" + converter.Convert(convertedData));
 
-                Console.WriteLine("\n" + str);
 
                 Console.WriteLine("\nEnter space and press Enter to continue or just Enter to exit");
                 var input = Console.ReadLine();

@@ -8,7 +8,8 @@ namespace JsonToTable.Converters
     public interface IConverter
     {
         Dictionary<string, List<string>> Convert(string data);
-
+        Dictionary<string, List<string>> Convert(string[] data);
+        
         string Convert(Dictionary<string, List<string>> data);
     }
 
@@ -22,6 +23,14 @@ namespace JsonToTable.Converters
             _deserializer = new Deserializer();
         }
 
+        public Dictionary<string, List<string>> Convert(string[] data) 
+        {
+            var str = string.Empty; 
+            foreach (var line in data)
+              str += line;
+
+            return Convert(str);
+        }
 
         public Dictionary<string, List<string>> Convert(string data)
         {
