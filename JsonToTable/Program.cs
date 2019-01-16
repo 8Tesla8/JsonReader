@@ -1,4 +1,5 @@
-﻿using JsonToTable.FileWorkers;
+﻿using JsonToTable.Converters;
+using JsonToTable.FileWorkers;
 using JsonToTable.FileWorkers.Reader;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -24,7 +25,9 @@ namespace JsonToTable
 
             var reader = new FileReader();
             var converter = new Converters.Converter();
-           
+
+            var dataChecker = new DataChecker();
+
             while (true)
             {
 
@@ -37,7 +40,33 @@ namespace JsonToTable
                 Console.WriteLine("\n" + resultStr);
 
 
-                Console.WriteLine("\nEnter space and press Enter to continue or just Enter to exit");
+                //check
+                var checkResults = dataChecker.Check(convertedData);
+
+
+                //crete function filter result to string
+                Console.WriteLine("\nFiltration result");
+                foreach (var res in checkResults)
+                {
+                    if (res.KeyWas) 
+                    {
+                        Console.Write("Filter: \n" + res.Key + "\t");
+
+                        foreach (var filter in res.Filters)
+                        {
+                            Console.Write(filter + " ");
+                        }
+
+                        Console.Write("\nIndexes: ");
+                        foreach (var index in res.Indexes)
+                        {
+                            Console.Write(index + " ");
+                        }
+                    }
+                }
+                //
+
+                Console.WriteLine("\n\nEnter space and press Enter to continue or just Enter to exit");
                 var input = Console.ReadLine();
                 if (!input.Equals(" ", StringComparison.OrdinalIgnoreCase))
                     break;
