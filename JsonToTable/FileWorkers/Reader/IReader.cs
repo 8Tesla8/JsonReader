@@ -5,10 +5,15 @@ using System.Text;
 namespace JsonToTable.FileWorkers.Reader
 {
 
-    public interface IReader
+    public interface IWriter<T> 
+    {
+        void Write(string path, T data);
+    }
+
+
+    public interface IReader : IWriter<string>
     {
         string[] Read(string path);
-        void Write(string path, string info);
     }
 
 

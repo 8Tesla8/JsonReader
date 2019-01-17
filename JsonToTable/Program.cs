@@ -25,6 +25,8 @@ namespace JsonToTable
 
             var reader = new FileReader();
 
+            var excelWriter = new ExcelWriter();
+
             var converterJson = new ConverterJSON();
             var converterDictionaryList = new ConverterDictionaryList();
             var converterCheckResult = new ConverterCheckResult();
@@ -39,6 +41,7 @@ namespace JsonToTable
                 var resultStr = converterDictionaryList.Convert(convertedData);
                 reader.Write(PathDefinder.Path + "/result.txt", resultStr);
 
+                excelWriter.Write(PathDefinder.Path + "/result.xlsx", convertedData);
 
                 Console.WriteLine("\n" + resultStr);
 
