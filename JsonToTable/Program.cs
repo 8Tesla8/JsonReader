@@ -41,7 +41,6 @@ namespace JsonToTable
                 var resultStr = converterDictionaryList.Convert(convertedData);
                 reader.Write(PathDefinder.Path + "/result.txt", resultStr);
 
-                excelWriter.Write(PathDefinder.Path + "/result.xlsx", convertedData);
 
                 Console.WriteLine("\n" + resultStr);
 
@@ -51,6 +50,11 @@ namespace JsonToTable
                 var checkResultsStr = converterCheckResult.Convert(checkResults);
 
                 Console.WriteLine(checkResultsStr);
+
+
+                excelWriter.Write(PathDefinder.Path + "/result.xlsx",
+                    new WriteModel { Data = convertedData }); //read filter settings
+
 
 
                 Console.WriteLine("\n\nEnter space and press Enter to continue or just Enter to exit");

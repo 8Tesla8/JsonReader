@@ -1,17 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using JsonToTable.Converters;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace JsonToTable.FileWorkers.Reader
 {
-    public class ExcelWriter : IWriter<Dictionary<string, List<string>>>
+    public class DataModel 
     {
+        public Dictionary<string, List<string>> Data;
+        public Dictionary<string, List<string>> Filters; //set filters
 
-        private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-
-        public void Write(string path, Dictionary<string, List<string>> data)
+        public DataModel()
         {
+            Filters = new Dictionary<string, List<string>>();
+
+            var list = new List<string>();
+            list.Add("2");
+            list.Add("4");
+
+            Filters.Add("id", list);
+        }
+    }
+
+
+    public class ExcelWriter : IWriter<DataModel>
+    {
+        public void Write(string path, DataModel model)
+        {
+            var data = model.Data;
 
             using (ExcelPackage excel = new ExcelPackage())
             {
@@ -19,10 +39,10 @@ namespace JsonToTable.FileWorkers.Reader
                 var worksheet = excel.Workbook.Worksheets.Add("Result");
 
                 //titles
-                var indexAlphabet = 0;
+                var indexAlphabet = 1;
                 foreach (var key in data.Keys)
                 {
-                    worksheet.Cells[_alphabet[indexAlphabet] + 1.ToString()].Value = key;  
+                    worksheet.Cells[GetLetter(indexAlphabet) + 1].Value = key;  
                     indexAlphabet++;
                 }
 
@@ -32,29 +52,47 @@ namespace JsonToTable.FileWorkers.Reader
 
 
                 //set data
-                indexAlphabet = 0;
+                indexAlphabet = 1;
                 foreach (var dict in data)
                 {
-                    char letter = _alphabet[indexAlphabet];
-
                     for (int i = 0, excelIndex = 2; i < dict.Value.Count; i++, excelIndex++)
                     {
-                        worksheet.Cells[letter + excelIndex.ToString()].Value = dict.Value[i];
+                        var l = GetLetter(indexAlphabet);
+                        worksheet.Cells[GetLetter(indexAlphabet) + excelIndex].Value = dict.Value[i];
+
+                        //check 
+                        if(model.Filters.ContainsKey(dict.Key))
+                        {
+                            if (!model.Filters[dict.Key].Any(s => s.Equals(dict.Value[i])))
+                            {
+                                worksheet.Cells[GetLetter(indexAlphabet) + excelIndex].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[GetLetter(indexAlphabet) + excelIndex].Style.Fill.BackgroundColor.SetColor(Color.Orange);
+                            }
+                        }
+
                     }
 
                     indexAlphabet++;
                 }
 
 
-
-
-                //worksheet.Cells.AutoFitColumns(minWidth, maxWidth);
-
-                //worksheet.Cells["A1"].LoadFromDataTable(TheDataTable, true);
-                //worksheet.Cells["F4"].BackgroundColor.SetColor(Color.Red);
-
                 excel.SaveAs(newFile);
             }
+        }
+
+
+        private string GetLetter(int index)
+        {
+            string columnString = "";
+            decimal columnNumber = index;
+            while (columnNumber > 0)
+            {
+                decimal currentLetterNumber = (columnNumber - 1) % 26;
+                char currentLetter = (char)(currentLetterNumber + 65);
+                columnString = currentLetter + columnString;
+                columnNumber = (columnNumber - (currentLetterNumber + 1)) / 26;
+            }
+            return columnString;
         }
     }
 }
