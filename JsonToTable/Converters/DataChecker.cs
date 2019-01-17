@@ -23,14 +23,14 @@ namespace JsonToTable.Converters
         }
     }
 
-
+    // TODO create interface , change location of file 
     public class DataChecker
     {
         public DataChecker()
         {
 
         }
-        //read filtration
+        // TODO read filtration
 
 
         public List<CheckResult> Check(Dictionary<string, List<string>> data) {
@@ -85,5 +85,7 @@ namespace JsonToTable.Converters
 
             return result;
         }
+
+     
     }
 }

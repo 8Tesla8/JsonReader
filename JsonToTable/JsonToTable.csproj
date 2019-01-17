@@ -13,7 +13,6 @@
     <Folder Include="Desirializers\" />
     <Folder Include="FileWorkers\" />
     <Folder Include="FileWorkers\Reader\" />
-    <Folder Include="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Converter\Base\IConverter.cs" />

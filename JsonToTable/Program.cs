@@ -24,16 +24,19 @@ namespace JsonToTable
 
 
             var reader = new FileReader();
-            var converter = new Converters.Converter();
+
+            var converterJson = new ConverterJSON();
+            var converterDictionaryList = new ConverterDictionaryList();
+            var converterCheckResult = new ConverterCheckResult();
 
             var dataChecker = new DataChecker();
 
             while (true)
             {
 
-                var convertedData = converter.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
+                var convertedData = converterJson.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
 
-                var resultStr = converter.Convert(convertedData);
+                var resultStr = converterDictionaryList.Convert(convertedData);
                 reader.Write(PathDefinder.Path + "/result.txt", resultStr);
 
 
@@ -42,29 +45,10 @@ namespace JsonToTable
 
                 //check
                 var checkResults = dataChecker.Check(convertedData);
+                var checkResultsStr = converterCheckResult.Convert(checkResults);
 
+                Console.WriteLine(checkResultsStr);
 
-                //crete function filter result to string
-                Console.WriteLine("\nFiltration result");
-                foreach (var res in checkResults)
-                {
-                    if (res.KeyWas) 
-                    {
-                        Console.Write("Filter: \n" + res.Key + "\t");
-
-                        foreach (var filter in res.Filters)
-                        {
-                            Console.Write(filter + " ");
-                        }
-
-                        Console.Write("\nIndexes: ");
-                        foreach (var index in res.Indexes)
-                        {
-                            Console.Write(index + " ");
-                        }
-                    }
-                }
-                //
 
                 Console.WriteLine("\n\nEnter space and press Enter to continue or just Enter to exit");
                 var input = Console.ReadLine();
