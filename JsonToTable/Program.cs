@@ -12,6 +12,15 @@ namespace JsonToTable
     {
         static void Main(string[] args)
         {
+            // improvements
+            // create Http request and deseriaze response - read setting about request from file
+            // instead of Dictionaty<string, List<string>> - create 
+            //class Table 
+            // prop List<Column> Columns
+            //
+            //class Column
+            // prop List<string> Data 
+
             Console.WriteLine("Hello World! \n");
 
             Console.WriteLine("Current path: ");
@@ -35,7 +44,6 @@ namespace JsonToTable
 
             while (true)
             {
-
                 var convertedData = converterJson.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
 
                 var resultStr = converterDictionaryList.Convert(convertedData);
@@ -53,7 +61,7 @@ namespace JsonToTable
 
 
                 excelWriter.Write(PathDefinder.Path + "/result.xlsx",
-                    new WriteModel { Data = convertedData }); //read filter settings
+                    new DataModel { Data = convertedData }); //read filter settings
 
 
 
