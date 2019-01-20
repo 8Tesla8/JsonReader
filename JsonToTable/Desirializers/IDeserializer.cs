@@ -3,12 +3,23 @@ using System.Collections.Generic;
 
 namespace JsonToTable.Desirializers
 {
-    public interface IDeserializer
+    public interface IDeserializerItem<T>
     {
-        List<Dictionary<string, string>> DeserializeArray(string data);
+        T DeserializeItem(string data);
+    }
 
-        Dictionary<string, string> DeserializeItem(string data);
-     
+
+    public interface IDeserializerArray<T> 
+    {   
+        List<T> DeserializeArray(string data);
+    }
+
+
+    public interface IDeserializer<T> : IDeserializerItem<T>, IDeserializerArray<T>
+    {
+        //List<T> DeserializeArray(string data);
+        //T DeserializeItem(string data);
+
         dynamic DeserializeDynamic(string data);
     }
 }

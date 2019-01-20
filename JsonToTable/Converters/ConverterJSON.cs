@@ -8,7 +8,7 @@ namespace JsonToTable.Converters
 {
     public class ConverterJSON : IConverter<Dictionary<string, List<string>>, string[]>
     {
-        protected readonly IDeserializer _deserializer;
+        protected readonly IDeserializer<Dictionary<string, string>> _deserializer;
 
         public ConverterJSON()
         {
@@ -54,7 +54,6 @@ namespace JsonToTable.Converters
                         dictionaries.Add(_deserializer.DeserializeItem(item));
                     }
                 }
-
             }
 
 
@@ -87,7 +86,6 @@ namespace JsonToTable.Converters
             foreach (string value in data)
             {
                 builder.Append(value);
-                //builder.Append('.');
             }
             return builder.ToString().TrimStart().TrimEnd();
         }

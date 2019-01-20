@@ -1,4 +1,5 @@
 ﻿using JsonToTable.Converters;
+using JsonToTable.Data;
 using JsonToTable.FileWorkers;
 using JsonToTable.FileWorkers.Reader;
 using Newtonsoft.Json;
@@ -13,13 +14,12 @@ namespace JsonToTable
         static void Main(string[] args)
         {
             // improvements
+            // write in console data which did not passed according to filter
             // create Http request and deseriaze response - read setting about request from file
-            // instead of Dictionaty<string, List<string>> - create 
-            //class Table 
-            // prop List<Column> Columns
-            //
-            //class Column
-            // prop List<string> Data 
+
+            // create abstract class table converter 
+            // inherit DataTableConverter and FilterTableConverter
+
 
             Console.WriteLine("Hello World! \n");
 
@@ -36,11 +36,29 @@ namespace JsonToTable
 
             var excelWriter = new ExcelWriter();
 
+            //
             var converterJson = new ConverterJSON();
             var converterDictionaryList = new ConverterDictionaryList();
             var converterCheckResult = new ConverterCheckResult();
 
             var dataChecker = new DataChecker();
+
+            //test +++
+            var convJsonToDataTable = new ConverterJsonToDataTable();
+            var convJsonToFilterTable = new ConverterJsonToFilterTable();
+
+            var dataTable = convJsonToDataTable.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
+            var filterTable = convJsonToFilterTable.Convert(reader.Read(PathDefinder.Path + "/filter.txt"));
+
+            //excel
+            var exceModel = new ExcelModel();
+            exceModel.Data = dataTable;
+            exceModel.Filters = filterTable;
+
+            var excelTableWriter = new ExcelTableWriter();
+            excelTableWriter.Write(PathDefinder.Path + "/result.xlsx", exceModel);
+            //test +++
+
 
             while (true)
             {
