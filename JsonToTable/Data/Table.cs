@@ -15,5 +15,17 @@ namespace JsonToTable.Data
         public Column GetColumn(string key) {
             return Columns.Find(c => c.Key.Equals(key));
         }
+
+
+        public override string ToString()
+        {
+            var str = string.Empty;
+            foreach (var column in Columns)
+            {
+                str += column + "\n";
+            }
+
+            return str;
+        }
     }
 }

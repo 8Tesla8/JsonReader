@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using JsonToTable.Data;
 using JsonToTable.Desirializers;
 
-namespace JsonToTable.Converters
+namespace JsonToTable.Converters.TableConverters
 {
-    public class ConverterJsonToFilterTable : IConverter<Table, string[]>
+    public class JsonToFilterTableConverter : JsonToTableConverter
     {
         protected readonly IDeserializerItem<Dictionary<string, List<string>>> _deserializer;
 
-        public ConverterJsonToFilterTable()
+        public JsonToFilterTableConverter()
         {
-            _deserializer = new FilterDeserializer();
+            _deserializer = new DictionaryListDeserializer();
         }
 
 
-        public Table Convert(string[] data)
+        public override Table Convert(string[] data)
         {
             var str = CreateOneLine(data);
 
@@ -43,18 +42,6 @@ namespace JsonToTable.Converters
                 }
             }
             return filterTable;
-        }
-
-
-        // TODO put method somewhere for ConverterJsonToDataTable
-        private string CreateOneLine(string[] data)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (string value in data)
-            {
-                builder.Append(value);
-            }
-            return builder.ToString().TrimStart().TrimEnd();
         }
     }
 }

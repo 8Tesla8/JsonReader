@@ -6,13 +6,13 @@ using System.Text;
 
 namespace JsonToTable.Converters
 {
-    public class ConverterJSON : IConverter<Dictionary<string, List<string>>, string[]>
+    public class JsonConverter : IConverter<Dictionary<string, List<string>>, string[]>
     {
         protected readonly IDeserializer<Dictionary<string, string>> _deserializer;
 
-        public ConverterJSON()
+        public JsonConverter()
         {
-            _deserializer = new Deserializer();
+            _deserializer = new DictionaryDeserializer();
         }
 
         public Dictionary<string, List<string>> Convert(string[] data)

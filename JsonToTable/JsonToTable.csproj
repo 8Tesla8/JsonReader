@@ -16,6 +16,7 @@
     <Folder Include="FileWorkers\Reader\" />
     <Folder Include="Data\" />
     <Folder Include="Chekers\" />
+    <Folder Include="Converters\TableConverters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Converter\Base\IConverter.cs" />

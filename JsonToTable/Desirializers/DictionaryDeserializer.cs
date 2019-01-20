@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonToTable.Desirializers
 {
-    public class Deserializer : IDeserializer <Dictionary<string, string>>
+    public class DictionaryDeserializer : IDeserializer <Dictionary<string, string>>
     {
         public List<Dictionary<string, string>> DeserializeArray(string data)
         {

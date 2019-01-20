@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace JsonToTable.Desirializers
 {
-    public class FilterDeserializer : IDeserializerItem<Dictionary<string, List<string>>>
+    public class DictionaryListDeserializer : IDeserializerItem<Dictionary<string, List<string>>>
     {
         public Dictionary<string, List<string>> DeserializeItem(string data)
         {

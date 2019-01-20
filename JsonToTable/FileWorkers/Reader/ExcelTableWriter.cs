@@ -11,7 +11,7 @@ namespace JsonToTable.FileWorkers.Reader
     public class ExcelModel 
     {
         public Table Data;
-        public Table Filters; //set filters
+        public Table Filters; 
     }
 
 

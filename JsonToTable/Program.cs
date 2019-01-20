@@ -1,4 +1,6 @@
-﻿using JsonToTable.Converters;
+﻿using JsonToTable.Chekers;
+using JsonToTable.Converters;
+using JsonToTable.Converters.TableConverters;
 using JsonToTable.Data;
 using JsonToTable.FileWorkers;
 using JsonToTable.FileWorkers.Reader;
@@ -17,71 +19,61 @@ namespace JsonToTable
             // write in console data which did not passed according to filter
             // create Http request and deseriaze response - read setting about request from file
 
-            // create abstract class table converter 
-            // inherit DataTableConverter and FilterTableConverter
-
 
             Console.WriteLine("Hello World! \n");
 
+            try 
+            {
+                Start(); 
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message); 
+            }
+        }
+
+
+        private static void Start() 
+        {
             Console.WriteLine("Current path: ");
             Console.WriteLine(PathDefinder.Path + "\n");
 
             Console.WriteLine("Write path to data.txt file or press enter to use current path: ");
             var path = Console.ReadLine();
-            if (!string.IsNullOrEmpty(path)) 
+            if (!string.IsNullOrEmpty(path))
                 PathDefinder.Path = path;
 
 
             var reader = new FileReader();
-
-            var excelWriter = new ExcelWriter();
-
-            //
-            var converterJson = new ConverterJSON();
-            var converterDictionaryList = new ConverterDictionaryList();
-            var converterCheckResult = new ConverterCheckResult();
-
-            var dataChecker = new DataChecker();
-
-            //test +++
-            var convJsonToDataTable = new ConverterJsonToDataTable();
-            var convJsonToFilterTable = new ConverterJsonToFilterTable();
-
-            var dataTable = convJsonToDataTable.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
-            var filterTable = convJsonToFilterTable.Convert(reader.Read(PathDefinder.Path + "/filter.txt"));
-
-            //excel
-            var exceModel = new ExcelModel();
-            exceModel.Data = dataTable;
-            exceModel.Filters = filterTable;
-
             var excelTableWriter = new ExcelTableWriter();
-            excelTableWriter.Write(PathDefinder.Path + "/result.xlsx", exceModel);
-            //test +++
+
+            var convJsonToDataTable = new JsonToDataTableConverter();
+            var convJsonToFilterTable = new JsonToFilterTableConverter();
 
 
             while (true)
             {
-                var convertedData = converterJson.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
-
-                var resultStr = converterDictionaryList.Convert(convertedData);
-                reader.Write(PathDefinder.Path + "/result.txt", resultStr);
-
-
-                Console.WriteLine("\n" + resultStr);
+                var exceModel = new ExcelModel();
+                exceModel.Data = convJsonToDataTable.Convert(reader.Read(PathDefinder.Path + "/data.txt"));
+                exceModel.Filters = convJsonToFilterTable.Convert(reader.Read(PathDefinder.Path + "/filter.txt"));
 
 
-                //check
-                var checkResults = dataChecker.Check(convertedData);
-                var checkResultsStr = converterCheckResult.Convert(checkResults);
+                // check data
+                var checker = new TableCheker();
+                var checkResult = checker.Check(exceModel.Data, exceModel.Filters);
 
-                Console.WriteLine(checkResultsStr);
+                Console.WriteLine("Filter: ");
+                Console.WriteLine(exceModel.Filters);
+
+                Console.WriteLine("Data which not fit:");
+                Console.WriteLine(checkResult);
+                //
 
 
-                excelWriter.Write(PathDefinder.Path + "/result.xlsx",
-                    new DataModel { Data = convertedData }); //read filter settings
-
-
+                // write results
+                excelTableWriter.Write(PathDefinder.Path + "/result.xlsx", exceModel);
+                reader.Write(PathDefinder.Path + "/result.txt", checkResult.ToString());
+                //
 
                 Console.WriteLine("\n\nEnter space and press Enter to continue or just Enter to exit");
                 var input = Console.ReadLine();

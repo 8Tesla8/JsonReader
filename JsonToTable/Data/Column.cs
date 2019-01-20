@@ -14,5 +14,18 @@ namespace JsonToTable.Data
         {
             Data = new List<string>();
         }
+
+
+        public override string ToString()
+        {
+            var str = Key + "\t";
+
+            foreach (var item in Data)
+            {
+                str += item + "\t";
+            }
+
+            return str;
+        }
     }
 }
